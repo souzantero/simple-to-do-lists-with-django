@@ -3,16 +3,11 @@ from django.http import HttpResponse
 from lists.models import Item
 
 def home_page(request):
-    home_page_template = "home.html"
+    return render(request, "home.html")
 
-    if request.method == 'POST':
-        Item.objects.create(text = request.POST['item_text'])
-        return redirect('/lists/the-only-list-in-the-world/')
-
-    return render(
-        request, 
-        home_page_template
-    )
+def new_list(request):
+    Item.objects.create(text = request.POST['item_text'])
+    return redirect('/lists/the-only-list-in-the-world/')
 
 def view_list(request):
     view_list_template = "list.html"
