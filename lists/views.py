@@ -6,19 +6,32 @@ def home_page(request):
     return render(request, "home.html")
 
 def new_list(request):
+    created_list = List.objects.create()
+
     Item.objects.create(
         text = request.POST['item_text'],
-        list = List.objects.create()
+        list = created_list
     )
 
-    return redirect('/lists/the-only-list-in-the-world/')
+    return redirect(f'/lists/{created_list.id}/')
 
-def view_list(request):
-    view_list_template = "list.html"
+def add_item(request, list_id):
+    recovered_list = List.objects.get(id = list_id)
+
+    Item.objects.create(
+        text = request.POST['item_text'],
+        list = recovered_list
+    )
+
+    return redirect(f'/lists/{recovered_list.id}/')
+
+def view_list(request, list_id):
+    recovered_list = List.objects.get(id = list_id)
+
     return render(
         request,
-        view_list_template,
+        "list.html",
         { 
-            'items': Item.objects.all()
+            'list': recovered_list
         }
     )
