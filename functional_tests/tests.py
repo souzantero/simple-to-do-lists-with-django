@@ -73,7 +73,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Ela percebe que sua lista tem um URL único
         edith_list_url = self.browser.current_url
-        self.assertRegex(edith_list_url, '/list/.+')
+        self.assertRegex(edith_list_url, '/lists/.+')
 
         # Agora, um novo usuário, Francis, chega ao site.
 
