@@ -28,19 +28,27 @@ def new_list(request):
 
 def view_list(request, list_id):
     recovered_list = List.objects.get(id = list_id)
+    error = None
 
     if request.method == 'POST':
-        Item.objects.create(
-            text = request.POST['item_text'],
-            list = recovered_list
-        )
-        
-        return redirect(f'/lists/{recovered_list.id}/')
+        try:
+            item = Item(
+                text = request.POST['item_text'],
+                list = recovered_list
+            )
+
+            item.full_clean()
+            item.save()
+
+            return redirect(f'/lists/{recovered_list.id}/')
+        except ValidationError:
+            error = "You can't have an empty list item"
 
     return render(
         request,
         "list.html",
         { 
-            'list': recovered_list
+            'list': recovered_list,
+            'error': error
         }
     )
