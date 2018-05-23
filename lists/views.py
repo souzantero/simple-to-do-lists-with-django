@@ -24,20 +24,18 @@ def new_list(request):
             'error': error
         })
 
-    return redirect(f'/lists/{created_list.id}/')
-
-def add_item(request, list_id):
-    recovered_list = List.objects.get(id = list_id)
-
-    Item.objects.create(
-        text = request.POST['item_text'],
-        list = recovered_list
-    )
-
-    return redirect(f'/lists/{recovered_list.id}/')
+    return redirect(f'/lists/{created_list.id}/') 
 
 def view_list(request, list_id):
     recovered_list = List.objects.get(id = list_id)
+
+    if request.method == 'POST':
+        Item.objects.create(
+            text = request.POST['item_text'],
+            list = recovered_list
+        )
+        
+        return redirect(f'/lists/{recovered_list.id}/')
 
     return render(
         request,
