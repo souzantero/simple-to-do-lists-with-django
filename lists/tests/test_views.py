@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.utils.html import escape
 from lists.views import home_page
 from lists.models import Item, List
-from lists.forms import ItemForm, EMPTY_ITEM_ERROR
+from lists.forms import ExistingListItemForm, ItemForm, DUPLICATE_ITEM_ERROR, EMPTY_ITEM_ERROR
 from unittest import skip
 
 class HomePageTest(TestCase):
@@ -48,7 +48,6 @@ class ListViewTest(TestCase):
 
         self.assertContains(response, escape(EMPTY_ITEM_ERROR))
 
-    @skip
     def test_duplicate_item_validation_errors_end_up_on_lists_page(self):
         new_list = List.objects.create()
         new_item = Item.objects.create(list = new_list, text = 'textey')
@@ -57,7 +56,7 @@ class ListViewTest(TestCase):
             data = { 'text': 'textey'}
         )
 
-        expected_error = escape("You've already got this in your list")
+        expected_error = escape(DUPLICATE_ITEM_ERROR)
         
         self.assertContains(response, expected_error)
         self.assertTemplateUsed(response, 'list.html')
