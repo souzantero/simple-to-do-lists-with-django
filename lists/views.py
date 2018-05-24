@@ -24,7 +24,7 @@ def new_list(request):
             'error': error
         })
 
-    return redirect(f'/lists/{created_list.id}/') 
+    return redirect(created_list) 
 
 def view_list(request, list_id):
     recovered_list = List.objects.get(id = list_id)
@@ -40,7 +40,7 @@ def view_list(request, list_id):
             item.full_clean()
             item.save()
 
-            return redirect(f'/lists/{recovered_list.id}/')
+            return redirect(recovered_list)
         except ValidationError:
             error = "You can't have an empty list item"
 
