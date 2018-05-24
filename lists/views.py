@@ -10,7 +10,7 @@ def home_page(request):
 def new_list(request):
     created_list = List.objects.create()
     item = Item(
-        text = request.POST['item_text'],
+        text = request.POST['text'],
         list = created_list
     )
 
@@ -34,7 +34,7 @@ def view_list(request, list_id):
     if request.method == 'POST':
         try:
             item = Item(
-                text = request.POST['item_text'],
+                text = request.POST['text'],
                 list = recovered_list
             )
 
