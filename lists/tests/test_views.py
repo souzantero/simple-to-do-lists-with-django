@@ -6,6 +6,7 @@ from django.utils.html import escape
 from lists.views import home_page
 from lists.models import Item, List
 from lists.forms import ItemForm, EMPTY_ITEM_ERROR
+from unittest import skip
 
 class HomePageTest(TestCase):
     def test_use_home_template(self):
@@ -46,6 +47,21 @@ class ListViewTest(TestCase):
         response = self.post_invalid_input()
 
         self.assertContains(response, escape(EMPTY_ITEM_ERROR))
+
+    @skip
+    def test_duplicate_item_validation_errors_end_up_on_lists_page(self):
+        new_list = List.objects.create()
+        new_item = Item.objects.create(list = new_list, text = 'textey')
+        response = self.client.post(
+            f'/lists/{new_list.id}/',
+            data = { 'text': 'textey'}
+        )
+
+        expected_error = escape("You've already got this in your list")
+        
+        self.assertContains(response, expected_error)
+        self.assertTemplateUsed(response, 'list.html')
+        self.assertEqual(Item.objects.all().count(), 1)
 
     def test_uses_list_template(self):
         new_list = List.objects.create()
